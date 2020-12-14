@@ -8,7 +8,7 @@ const camera =new THREE.PerspectiveCamera(90,window.innerWidth/window.innerHeigh
 const renderer= new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
-scene.background = new THREE.Color( 0x000000 );
+// scene.background = new THREE.Color( 0x000000 );
 //const controls=new OrbitControls(camera,renderer.domElement);
 
 // const geometry=new THREE.BoxGeometry(10,10,50);
@@ -16,9 +16,24 @@ scene.background = new THREE.Color( 0x000000 );
 // const cube= new THREE.Mesh(geometry,material);
 // scene.add(cube);
 
+const loader = new THREE.CubeTextureLoader();
+loader.setPath( '/img/' );
+
+
+
+const textureCube = loader.load( [
+	'px.png', 'nx.png',
+	'py.png', 'ny.png',
+	'pz.png', 'nz.png'
+] );
+scene.background= textureCube;
+
+const cubeMat = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
+
+
 
 const cubeGeo= new THREE.BoxGeometry();
-const cubeMat= new THREE.MeshPhongMaterial({color:0x3366ff});
+
 const cube =new THREE.Mesh(cubeGeo,cubeMat);
 cube.position.set(-12,0.5,-5)
 scene.add(cube);
@@ -182,8 +197,8 @@ const blocker = document.getElementById( 'blocker' );
 
 function animate(){
 
-  cube.rotation.x += 0.1
-  cube.rotation.y+= 0.1
+  cube.rotation.x += 0.01
+  cube.rotation.y+= 0.01
 
 
  requestAnimationFrame(animate);
