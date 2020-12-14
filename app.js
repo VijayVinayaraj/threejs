@@ -27,17 +27,17 @@ const textureCube = loader.load( [
 	'pz.png', 'nz.png'
 ] );
 scene.background= textureCube;
-
 const cubeMat = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
-
-
-
 const cubeGeo= new THREE.BoxGeometry();
-
 const cube =new THREE.Mesh(cubeGeo,cubeMat);
 cube.position.set(-12,0.5,-5)
 scene.add(cube);
 
+
+//cube.addEventListener('',removeEverthing(),false)
+
+const corridor =[];
+const room=[];
 
 
 
@@ -47,6 +47,7 @@ function addcorridor(width,height,clr,x,y,z,X,Y,Z){
     const Mat = new THREE.MeshBasicMaterial({color:clr, side:THREE.DoubleSide});
     const corridorPlane = new THREE.Mesh(Geo,Mat);
     scene.add(corridorPlane);
+    corridor.push(corridorPlane)
     corridorPlane.position.set(x,y,z);
     corridorPlane.rotation.set(X,Y,Z);
 }
@@ -71,6 +72,7 @@ function addroom(width,height,clr,x,y,z,X,Y,Z){
         const roomMat = new THREE.MeshBasicMaterial({color:clr, side:THREE.DoubleSide});
         const roomPlane = new THREE.Mesh(roomGeo,roomMat);
         scene.add(roomPlane);
+        room.push(roomPlane);
         roomPlane.position.set(x,y,z);
         roomPlane.rotation.set(X,Y,Z);
 }
@@ -81,6 +83,9 @@ addroom(5,5,0xff99ff,-14.5,2,-5,0,1.57,0)
 addroom(5,5,0xffbf00,-12,2,-7.5,0,0,0)
 addroom(5,5,0xffbf00,-12,2,-2.5,0,0,0)
 
+
+
+
 // rezize window
 window.addEventListener('resize',() => {
 camera.aspect=window.innerHeight/window.innerHeight;
@@ -89,6 +94,7 @@ renderer.setSize(window.innerWidth,window.innerHeight)
 controls.handleResize();
 render();
 },false)
+
 
 
 const controls = new PointerLockControls( camera, document.body );
@@ -126,7 +132,7 @@ const blocker = document.getElementById( 'blocker' );
 			const direction = new THREE.Vector3();
 
                 const onKeyDown = function ( event ) {
-
+                   
 					switch ( event.keyCode ) {
 
 						case 38: // up
@@ -149,9 +155,8 @@ const blocker = document.getElementById( 'blocker' );
 							moveRight = true;
 							break;
 
-						case 32: // space
-							if ( canJump === true ) velocity.y += 350;
-							canJump = false;
+						case 13: // space
+							removeEverthing();
 							break;
 
 					}
@@ -159,7 +164,7 @@ const blocker = document.getElementById( 'blocker' );
 				};
 
 				const onKeyUp = function ( event ) {
-
+                              
 					switch ( event.keyCode ) {
 
 						case 38: // up
@@ -200,7 +205,7 @@ function animate(){
   cube.rotation.x += 0.01
   cube.rotation.y+= 0.01
 
-
+   
  requestAnimationFrame(animate);
  const time =performance.now();
 
@@ -236,3 +241,30 @@ const render =()=>{
 }
 
 animate();
+let hidden=false
+function removeEverthing()
+{
+
+    if (hidden==false) { 
+        hidden=true;
+    corridor.forEach(
+        (node,index)=>{
+        scene.remove(corridor[index])
+                             })
+    
+       room.forEach(
+          (node,index)=>{
+         scene.remove(room[index])
+           })
+    }
+else { 
+    hidden=false;
+    corridor.forEach((node,index)=>{
+        scene.add(corridor[index])
+    })
+    room.forEach((node,index)=>{
+        scene.add(room[index])
+    })
+}
+    
+}
